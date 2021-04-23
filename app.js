@@ -23,7 +23,10 @@ app.get('', (req, res) => {
     }, (error) => {
       console.log(error);
     });
+})
 
+app.get('/about', (req, res) => {
+  res.render('about');
 })
 
 app.post('/cars', (req, res) => {
