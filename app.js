@@ -46,6 +46,18 @@ io.on("connection", (socket) => {
     socket.broadcast.emit('reload-cars', cars)
   });
 
+  socket.on("update-hash-user", async (arg) => {
+    let car = await findBy('hashCar', arg.hashCar)
+
+    if(car.status === 404) {
+      return;
+    }
+
+    hashCar = arg.hashCar;
+
+    socket.emit('car-exists', {});
+  })
+
   socket.on('disconnect', async () => {
     if(hashCar) {
       let car = await findBy('hashCar', hashCar)

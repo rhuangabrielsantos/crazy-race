@@ -1,7 +1,12 @@
 var myModal = new bootstrap.Modal(document.getElementById('createCar'), {})
 
-$(document).ready(() => {
+const socket = io();
 
+if(localStorage.getItem('hashCar')) {
+  socket.emit("update-hash-user", {hashCar: localStorage.getItem('hashCar')});
+}
+
+$(document).ready(() => {
   var myCarousel = document.querySelector('#carsCarousel')
 
   var carousel = new bootstrap.Carousel(myCarousel, {
@@ -87,8 +92,6 @@ function setColor(action) {
   $("#color").val($(".carousel-item.active").data('prev-color'))
 }
 
-const socket = io();
-
 socket.on('reload-cars', (cars) => {
 
   if(cars.status === 400) {
@@ -97,6 +100,10 @@ socket.on('reload-cars', (cars) => {
   }
 
   reloadCarsView(cars)
+})
+
+socket.on('car-exists', () => {
+  $('#criarCompetidor').addClass('invisible')
 })
 
 function reloadCarsView(cars) {
