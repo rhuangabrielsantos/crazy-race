@@ -26,7 +26,9 @@ $(document).ready(() => {
         createCar()
 
         const socket = io();
-        socket.emit("created-car", {});
+        socket.emit("created-car", {hashCar: localStorage.getItem('hashCar')});
+
+        $('#criarCompetidor').addClass('invisible')
 
       }, false)
   })
@@ -45,6 +47,7 @@ $(document).ready(() => {
           var success = new bootstrap.Modal(document.getElementById('success'), {})
           success.show();
 
+          localStorage.setItem('hashCar', response.hashCar);
           return;
         }
 
@@ -87,6 +90,12 @@ function setColor(action) {
 const socket = io();
 
 socket.on('reload-cars', (cars) => {
+
+  if(cars.status === 400) {
+    $("#cars").html('');
+    return;
+  }
+
   reloadCarsView(cars)
 })
 

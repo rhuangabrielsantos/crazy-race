@@ -8,9 +8,7 @@ const port = process.env.PORT || 3000;
 
 const io = require("socket.io")(httpServer, {});
 
-const { create, findAll } = require('./src/cars.js');
-
-const axios = require('axios');
+const { create, findAll, findBy, deleteById } = require('./src/cars.js');
 
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + '/public/css'))
@@ -38,10 +36,27 @@ app.post('/cars', async (req, res) => {
 })
 
 io.on("connection", (socket) => {
+  let hashCar = null;
+
   socket.on("created-car", async (arg) => {
+    hashCar = arg.hashCar
+
     let cars = await findAll()
 
     socket.broadcast.emit('reload-cars', cars)
+  });
+
+  socket.on('disconnect', async () => {
+    if(hashCar) {
+      let car = await findBy('hashCar', hashCar)
+      let response = await deleteById(car.id)
+  
+      if (response.status === 200) {
+        let cars = await findAll();
+  
+        socket.broadcast.emit('reload-cars', cars);
+      }
+    }
   });
 });
 

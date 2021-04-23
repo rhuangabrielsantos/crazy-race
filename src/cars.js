@@ -9,6 +9,15 @@ async function findAll() {
     });
 }
 
+async function findBy(column, value) { 
+  return axios.get(process.env.API + '/cars/' + column + '/' + value)
+    .then((response) => {
+      return response.data
+    }, (error) => {
+      console.log(error)
+    });
+}
+
 async function create(car) {
   return axios.post(process.env.API + '/cars', car)
     .then((response) => {
@@ -18,4 +27,13 @@ async function create(car) {
     });
 }
 
-module.exports = { findAll, create }
+async function deleteById(id) {
+  return axios.delete(process.env.API + '/cars/' + id)
+    .then((response) => {
+      return response.data
+    }, (error) => {
+      console.log(error)
+    });
+}
+
+module.exports = { create, findAll, findBy, deleteById }
