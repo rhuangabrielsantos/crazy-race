@@ -24,6 +24,10 @@ $(document).ready(() => {
         form.classList.add('was-validated')
 
         createCar()
+
+        const socket = io();
+        socket.emit("created-car", {});
+
       }, false)
   })
 
@@ -78,4 +82,30 @@ function setColor(action) {
   }
 
   $("#color").val($(".carousel-item.active").data('prev-color'))
+}
+
+const socket = io();
+
+socket.on('reload-cars', (cars) => {
+  reloadCarsView(cars)
+})
+
+function reloadCarsView(cars) {
+  let carHtml = '<section class="d-flex justify-content-center align-items-center">'
+
+  $(cars).each((index, car) => {
+    carHtml += 
+      '<section>' +
+        `<img src="/images/view/${car.color}-car.svg" class="car" alt="car">` +
+        `<h1 class="text-white bangers text-limit">${index + 1} - ${car.racing_driver}</h1>` +
+      '</section>';
+
+    if (((index + 1) % 3) === 0) {
+      carHtml += '</section><section class="d-flex justify-content-center align-items-center">';
+    }    
+  })
+
+  carHtml += '</section>';
+
+  $("#cars").html(carHtml);
 }

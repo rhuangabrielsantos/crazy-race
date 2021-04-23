@@ -12,17 +12,16 @@
     integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" 
     crossorigin="anonymous"
   >
-
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23e61212%22></rect><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>😜</text></svg>" />
 
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous" defer></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
   <script src="/js/index.js" defer></script>
 
-  <title>Crazy Race</title>
+  <title>Formula TG</title>
 </head>
 <body class="bg-dark w-100">
 
@@ -129,8 +128,8 @@
     <button type="button" class="btn btn-secondary" aria-label="Criar competidor" onclick="showModalCreateCar()">Criar competidor</button>
   </header>
 
-  <section style="height: 80vh;">
-    <section class="d-flex justify-content-center align-items-center" >
+  <section id="cars" style="height: 80vh;">
+    <section class="d-flex justify-content-center align-items-center">
       <% for (var i = 0; i < cars.length; i++) { %>
         <section>
           <img src="/images/view/<%= cars[i].color %>-car.svg" class="car" alt="car">
