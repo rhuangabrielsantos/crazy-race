@@ -133,9 +133,8 @@
     <section class="d-flex justify-content-center align-items-center" >
       <% for (var i = 0; i < cars.length; i++) { %>
         <section>
-          <h2 class="text-white bangers"><%= i + 1 %></h2>
           <img src="/images/view/<%= cars[i].color %>-car.svg" class="car" alt="car">
-          <h1 class="text-white text-center"><%= cars[i].racing_driver %></h1>
+          <h1 class="text-white bangers text-limit"><%= i + 1 %> - <%= cars[i].racing_driver %></h1>
         </section>
 
           <% if (((i + 1) % 3) === 0) { %>

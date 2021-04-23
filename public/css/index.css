@@ -10,9 +10,16 @@
   height: 100px;
   width: auto;
 
-  margin: 20px 40px;
+  margin: 40px 40px;
 }
 
 .bangers { 
   font-family: Bangers, sans-serif;
+}
+
+.text-limit {
+  max-width: 15ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
