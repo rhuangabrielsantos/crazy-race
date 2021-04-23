@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
@@ -15,7 +17,7 @@ app.set('views', './views')
 app.set('view engine', 'ejs')
 
 app.get('', (req, res) => {
-  axios.get('http://localhost/cars')
+  axios.get(process.env.API + '/cars')
     .then((response) => {
       res.render('index', {'cars': response.data})
     }, (error) => {
@@ -25,7 +27,7 @@ app.get('', (req, res) => {
 })
 
 app.post('/cars', (req, res) => {
-  axios.post('http://localhost/cars', req.body)
+  axios.post(process.env.API + '/cars', req.body)
     .then((response) => {
       res.json(response.data)
     }, (error) => {
