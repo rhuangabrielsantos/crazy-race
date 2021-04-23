@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/css/index.css">
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" 
+    crossorigin="anonymous"
+  >
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23e61212%22></rect><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>😜</text></svg>" />
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
+  <script src="/js/index.js" defer></script>
+
+  <title>Crazy Race</title>
+</head>
+<body class="bg-dark w-100">
+
+<!-- INICIO DOS MODAIS -->
+  <div id="createCar" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Crie seu carro</h5>
+        </div>
+        <div class="modal-body d-flex align-items-center flex-column">
+
+          <div id="carsCarousel" class="carousel slide" data-interval="false">
+            <div class="carousel-inner">
+              <div class="carousel-item active" data-bs-interval="false" data-next-color="blue" data-prev-color="red">
+                <img src="/images/template/black-car.svg" class="d-block w-100" alt="black-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="orange" data-prev-color="black">
+                <img src="/images/template/blue-car.svg" class="d-block w-100" alt="blue-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="red" data-prev-color="blue">
+                <img src="/images/template/orange-car.svg" class="d-block w-100" alt="orange-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="black" data-prev-color="orange">
+                <img src="/images/template/red-car.svg" class="d-block w-100" alt="red-car">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carsCarousel" data-bs-slide="prev" onclick="setColor('prev')">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carsCarousel" data-bs-slide="next" onclick="setColor('next')">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <form id="formCreateCar" class="row g-3 w-100 needs-validation" novalidate>
+            <input type="hidden" name="color" id="color" value="black">
+
+            <div class="col-12">
+              <input type="text" name="racing_driver" class="form-control" placeholder="Nome do Piloto" aria-label="Nome do Piloto" required>
+              <div class="invalid-feedback">
+                Diga seu nome, prometo que não estou guardando nenhum dado, rs
+              </div>
+            </div>
+            <div class="col-md-6">
+              <select name="brand" class="form-select" aria-label="Escolha a marca do Carro" required>
+                <option value="" selected>Escolha a marca do Carro</option>
+                <option value="Ferrari">Ferrari</option>
+                <option value="Mercebes-Benz">Mercedes-Benz</option>
+                <option value="Dodge">Dodge</option>
+                <option value="Cadillac">Cadillac</option>
+              </select>
+              <div class="invalid-feedback">
+                Selecione a marca do seu carro
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <input type="text" name="model" class="form-control" placeholder="Modelo do Carro" aria-label="Modelo do Carro" required>
+              <div class="invalid-feedback">
+                O carro precisa do modelo
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <input type="number" name="year" class="form-control" placeholder="Ano" aria-label="Ano" required>
+              <div class="invalid-feedback">
+                Faltou o Ano
+              </div>
+            </div>
+
+            <div class="error">
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+              <button class="btn btn-success" type="submit">Criar competidor</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="success" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Carro foi criado, bora pra corrida!!
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FIM DOS MODAIS, PQP -->
+
+  <header class="d-flex justify-content-between m-3 align-items-center" style="height: 10vh;">
+    <h1 class="text-white bangers">Formula TG</h1>
+
+    <button type="button" class="btn btn-secondary" aria-label="Criar competidor" onclick="showModalCreateCar()">Criar competidor</button>
+  </header>
+
+  <section style="height: 80vh;">
+    <section class="d-flex justify-content-center align-items-center" >
+      <% for (var i = 0; i < cars.length; i++) { %>
+        <section>
+          <h2 class="text-white bangers"><%= i + 1 %></h2>
+          <img src="/images/view/<%= cars[i].color %>-car.svg" class="car" alt="car">
+          <h1 class="text-white text-center"><%= cars[i].racing_driver %></h1>
+        </section>
+
+          <% if (((i + 1) % 3) === 0) { %>
+            </section>
+            <section class="d-flex justify-content-center align-items-center">
+          <% } %>
+      <% } %>
+      </section>
+
+    </section>
+  </section>
+
+</body>
+</html>
