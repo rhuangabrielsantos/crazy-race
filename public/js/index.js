@@ -2,6 +2,8 @@ var myModal = new bootstrap.Modal(document.getElementById('createCar'), {})
 
 const socket = io();
 
+socket.emit("load-cars", '');
+
 if(localStorage.getItem('hashCar')) {
   socket.emit("update-hash-user", {hashCar: localStorage.getItem('hashCar')});
 }

@@ -38,6 +38,11 @@ app.post('/cars', async (req, res) => {
 io.on("connection", (socket) => {
   let hashCar = null;
 
+  socket.on('load-cars', async () => {
+    let cars = await findAll()
+    socket.emit('reload-cars', cars)
+  })
+
   socket.on("created-car", async (arg) => {
     hashCar = arg.hashCar
 
