@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000
 const io = require("socket.io")(httpServer, {})
 
 const { create, findAll, findBy, deleteById, saveNumber, updatePositions } = require('./src/cars.js')
-const { acceptRace, refuseRace } = require('./src/race.js')
+const { acceptRace, refuseRace, defineAllPositions, startRace } = require('./src/race.js')
 
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + '/public/css'))
@@ -99,6 +99,17 @@ io.on("connection", (socket) => {
       let cars = await findAll()
       socket.emit('reload-cars-race', cars)
       socket.broadcast.emit('reload-cars-race', cars)
+    }
+  })
+
+  socket.on("start-race", async() => {
+    await defineAllPositions()
+
+    let response = await startRace()
+
+    if (response.status === 200) {
+      let cars = await findAll()
+      socket.emit('race-was-started', cars)
     }
   })
 

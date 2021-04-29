@@ -169,9 +169,13 @@ function raceCanStart(cars) {
   })
 
   if (canStart) {
-    startRace(cars)
+    socket.emit('start-race', {})
   }
 }
+
+socket.on('race-was-started', (cars) => {
+  startRace(cars)
+})
 
 function startRace(cars) {
   hiddenButtons()
