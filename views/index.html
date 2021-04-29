@@ -14,7 +14,7 @@
   >
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23e61212%22></rect><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2260%22>😜</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.ico"/>
 
   <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous" defer></script>
@@ -31,22 +31,35 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Crie seu carro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body d-flex align-items-center flex-column">
 
           <div id="carsCarousel" class="carousel slide" data-interval="false">
             <div class="carousel-inner">
-              <div class="carousel-item active" data-bs-interval="false" data-next-color="blue" data-prev-color="red">
-                <img src="/images/template/black-car.svg" class="d-block w-100" alt="black-car">
+              <div class="carousel-item active" data-bs-interval="false" data-next-color="blue" data-prev-color="yellow">
+                <img src="/images/modal/black-car.svg" class="d-block w-100 car-race" alt="black-car">
               </div>
-              <div class="carousel-item" data-bs-interval="false" data-next-color="orange" data-prev-color="black">
-                <img src="/images/template/blue-car.svg" class="d-block w-100" alt="blue-car">
+              <div class="carousel-item" data-bs-interval="false" data-next-color="green" data-prev-color="black">
+                <img src="/images/modal/blue-car.svg" class="d-block w-100 car-race" alt="blue-car">
               </div>
-              <div class="carousel-item" data-bs-interval="false" data-next-color="red" data-prev-color="blue">
-                <img src="/images/template/orange-car.svg" class="d-block w-100" alt="orange-car">
+              <div class="carousel-item" data-bs-interval="false" data-next-color="orange" data-prev-color="blue">
+                <img src="/images/modal/green-car.svg" class="d-block w-100 car-race" alt="green-car">
               </div>
-              <div class="carousel-item" data-bs-interval="false" data-next-color="black" data-prev-color="orange">
-                <img src="/images/template/red-car.svg" class="d-block w-100" alt="red-car">
+              <div class="carousel-item" data-bs-interval="false" data-next-color="pink" data-prev-color="green">
+                <img src="/images/modal/orange-car.svg" class="d-block w-100 car-race" alt="orange-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="purple" data-prev-color="orange">
+                <img src="/images/modal/pink-car.svg" class="d-block w-100 car-race" alt="pink-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="red" data-prev-color="pink">
+                <img src="/images/modal/purple-car.svg" class="d-block w-100 car-race" alt="purple-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="yellow" data-prev-color="purple">
+                <img src="/images/modal/red-car.svg" class="d-block w-100 car-race" alt="red-car">
+              </div>
+              <div class="carousel-item" data-bs-interval="false" data-next-color="black" data-prev-color="red">
+                <img src="/images/modal/yellow-car.svg" class="d-block w-100 car-race" alt="yellow-car">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carsCarousel" data-bs-slide="prev" onclick="setColor('prev')">
@@ -99,7 +112,14 @@
             </div>
 
             <div class="d-flex justify-content-end mt-4">
-              <button class="btn btn-success" type="submit">Criar competidor</button>
+              <!-- <button class="btn btn-success" type="submit">Criar competidor</button> -->
+              <button type="submit" class="pushable">
+                <span class="shadow"></span>
+                <span class="edge green"></span>
+                <span class="front green">
+                  Criar competidor
+                </span>
+              </button>
             </div>
           </form>
 
@@ -123,12 +143,43 @@
   <!-- FIM DOS MODAIS, PQP -->
 
   <header class="d-flex justify-content-between m-3 align-items-center" style="height: 10vh;">
-    <h1 class="text-white bangers">Formula TG</h1>
+    <div class="d-flex justify-content-between m-3 align-items-center">
+      <img src="/images/logo.svg" class="me-2" alt="logo" style="width: 60px; height: auto;">
+      <h1 class="text-white bangers m-auto">Formula TG</h1>
+    </div>
 
-    <button id="criarCompetidor" type="button" class="btn btn-secondary" aria-label="Criar competidor" onclick="showModalCreateCar()">Criar competidor</button>
+    <div class="d-flex justify-content-between m-3 align-items-center">
+      <button class="pushable" id="criarCompetidor" onclick="showModalCreateCar()">
+        <span class="shadow"></span>
+        <span class="edge red"></span>
+        <span class="front red">
+          Criar competidor!
+        </span>
+      </button>
+
+      <button class="pushable disable" id="aceitarCorrida" onclick="acceptRace()">
+        <span class="shadow"></span>
+        <span class="edge green"></span>
+        <span class="front green">
+          Aceitar!
+        </span>
+      </button>
+
+      <button class="pushable disable" id="recusarCorrida" onclick="refuseRace()">
+        <span class="shadow"></span>
+        <span class="edge red"></span>
+        <span class="front red">
+          Recusar!
+        </span>
+      </button>
+    </div>
   </header>
 
-  <section id="cars" style="height: 80vh;">
+  <section id="cars" style="height: 70vh;">
+    
+  </section>
+
+  <section class="d-flex justify-content-between m-3 align-items-center" id="startRace" style="height: 5vh;">
     
   </section>
 

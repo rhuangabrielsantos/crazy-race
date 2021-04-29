@@ -10,7 +10,11 @@
   height: 100px;
   width: auto;
 
-  margin: 40px 40px;
+  margin: 20px 20px;
+}
+
+.car-race {
+  transform: scaleX(-1);
 }
 
 .bangers { 
@@ -19,7 +23,135 @@
 
 .text-limit {
   max-width: 15ch;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.pushable {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  transition: filter 250ms;
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: hsl(0deg 0% 0% / 0.25);
+  will-change: transform;
+  transform: translateY(2px);
+  transition:
+    transform
+    600ms
+    cubic-bezier(.3, .7, .4, 1);
+}
+
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+.edge.green {
+  background: linear-gradient(to left,    
+    #0f5132 0%,    
+    #105a38 8%,    
+    #105a38 92%,    
+    #0f5132 100%
+  )
+}
+
+.edge.gray {
+  background: linear-gradient(to left,    
+    #2d3632 0%,    
+    #3d3f3e 8%,    
+    #3d3f3e 92%,    
+    #2d3632 100%
+  )
+}
+
+.edge.red {
+  background: linear-gradient(
+      to left,
+      hsl(340deg 100% 16%) 0%,
+      hsl(340deg 100% 32%) 8%,
+      hsl(340deg 100% 32%) 92%,
+      hsl(340deg 100% 16%) 100%
+    );
+}
+
+.front {
+  display: block;
+  position: relative;
+  padding: 10px;
+  border-radius: 12px;
+  font-family: Bangers, sans-serif;
+  font-size: 2rem;
+  color: white;
+  will-change: transform;
+  transform: translateY(-4px);
+  transition:
+    transform
+    600ms
+    cubic-bezier(.3, .7, .4, 1);
+}
+
+.front.green {
+  background: #3D8257;
+}
+
+.front.gray {
+  background: #535855;
+}
+
+.front.red {
+  background: hsl(345deg 100% 47%);
+}
+
+.pushable:hover {
+  filter: brightness(110%);
+}
+
+.pushable:hover .front {
+  transform: translateY(-6px);
+  transition:
+    transform
+    250ms
+    cubic-bezier(.3, .7, .4, 1.5);
+}
+
+.pushable:active .front {
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+
+.pushable:hover .shadow {
+  transform: translateY(4px);
+  transition:
+    transform
+    250ms
+    cubic-bezier(.3, .7, .4, 1.5);
+}
+
+.pushable:active .shadow {
+  transform: translateY(1px);
+  transition: transform 34ms;
+}
+
+.pushable:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.disable {
+  display: none !important;
 }

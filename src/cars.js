@@ -36,4 +36,22 @@ async function deleteById(id) {
     });
 }
 
-module.exports = { create, findAll, findBy, deleteById }
+async function saveNumber(id, number) {
+  return axios.put(process.env.API + '/cars/number/' + id, {number: number})
+    .then((response) => {
+      return response.data
+    }, (error) => {
+      console.log(error)
+    });
+}
+
+async function updatePositions() {
+  return axios.put(process.env.API + '/updatePositions', {})
+    .then((response) => {
+      return response.data
+    }, (error) => {
+      console.log(error)
+    });
+}
+
+module.exports = { create, findAll, findBy, deleteById, saveNumber, updatePositions }
