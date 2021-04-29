@@ -273,8 +273,6 @@ function sendNumber(id, number) {
 }
 
 socket.on('saved-number', (cars) => {
-  console.log('Client: saved-number')
-  
   let canReload = true;
 
   animationStartRace(cars)
@@ -300,7 +298,5 @@ socket.on('saved-number', (cars) => {
 })
 
 socket.on('reload-cars-race', (cars) => {
-  console.log('Client: reload-cars-race')
-
   animationStartRace(cars)
 })
