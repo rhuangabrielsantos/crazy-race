@@ -84,16 +84,19 @@ io.on("connection", (socket) => {
   })
 
   socket.on("save-number", async (arg) => {
+    console.log('Server: save-number')
+
     let response = await saveNumber(arg.id, arg.number)
 
     if (response.status === 200) {
       let cars = await findAll()
-      socket.emit('saved-number', cars)
       socket.broadcast.emit('saved-number', cars)
     }
   })
 
   socket.on("update-positions", async() => {
+    console.log('Server: update-positions')
+
     let response = await updatePositions()
 
     if (response.status === 200) {

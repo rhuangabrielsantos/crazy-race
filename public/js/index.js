@@ -273,6 +273,8 @@ function sendNumber(id, number) {
 }
 
 socket.on('saved-number', (cars) => {
+  console.log('Client: saved-number')
+  
   let canReload = true;
 
   animationStartRace(cars)
@@ -290,7 +292,7 @@ socket.on('saved-number', (cars) => {
   let started = new Date().getTime()
 
   animationTimer = setInterval(() => {
-    if (new Date().getTime() - started > 1500) {
+    if (new Date().getTime() - started > 2000) {
       clearInterval(animationTimer)
       socket.emit('update-positions', {})
     }
@@ -298,5 +300,7 @@ socket.on('saved-number', (cars) => {
 })
 
 socket.on('reload-cars-race', (cars) => {
+  console.log('Client: reload-cars-race')
+
   animationStartRace(cars)
 })
