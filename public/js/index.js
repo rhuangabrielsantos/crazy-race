@@ -136,7 +136,7 @@ function reloadCarsView(cars) {
         '<div>' +
       '</section>';
 
-    if (((index + 1) % 3) === 0) {
+    if (((index + 1) % 4) === 0) {
       carHtml += '</section><section class="d-flex justify-content-center align-items-center">';
     }    
   })
@@ -270,7 +270,7 @@ function animationStartRace(cars, pointer, turns) {
     carHtml += '</div></section>';
     
 
-    if (((index + 1) % 5) === 0) {
+    if (((index + 1) % 4) === 0) {
       carHtml += '<section class="d-flex justify-content-center m-3 align-items-center">';
     }    
   })
