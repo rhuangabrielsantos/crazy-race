@@ -2,11 +2,11 @@ var myModal = new bootstrap.Modal(document.getElementById('createCar'), {})
 
 const socket = io();
 
-socket.emit("load-cars", '');
-
 if(localStorage.getItem('hashCar')) {
   socket.emit("update-hash-user", {hashCar: localStorage.getItem('hashCar')});
 }
+
+socket.emit("load-cars", '');
 
 $(document).ready(() => {
   var myCarousel = document.querySelector('#carsCarousel')
@@ -117,6 +117,11 @@ socket.on('car-exists', (status) => {
   $('#recusarCorrida').removeClass('disable')
 })
 
+socket.on('reload-cars-race-on', (cars) => {
+  $('#criarCompetidor').addClass('disable')
+  animationStartRace(cars, null)
+})
+
 function reloadCarsView(cars) {
   let carHtml = '<section class="d-flex justify-content-center align-items-center">'
 
@@ -173,26 +178,28 @@ function raceCanStart(cars) {
   }
 }
 
-socket.on('race-was-started', (cars) => {
-  startRace(cars)
+socket.on('race-was-started', (args) => {
+  startRace(args.cars, args.pointer)
 })
 
-function startRace(cars) {
+function startRace(cars, pointer) {
   hiddenButtons()
-  countdown(cars)
+  countdown(cars, pointer)
 }
 
 function hiddenButtons() {
   $('#recusarCorrida').addClass('disable')
+  $('#iniciarCorrida').addClass('disable')
+  $('#criarCompetidor').addClass('disable')
 }
 
-function countdown(cars) {
+function countdown(cars, pointer) {
   let timer = 3;
 
   let intervalId = setInterval(() => {
     if(timer === 0) {
       $("#startRace").html('')
-      animationStartRace(cars)
+      animationStartRace(cars, pointer)
 
       clearInterval(intervalId)
       return;
@@ -204,10 +211,30 @@ function countdown(cars) {
 
     timer--;
   }, 1500)
-
 }
 
-function animationStartRace(cars) {
+socket.on('animation-draw-number-client', (args) => {
+  animationDrawNumber(args.id)
+})
+
+function animationDrawNumber(id) {
+  let output, started, duration
+
+  output = $('#output-' + id)
+  started = new Date().getTime()
+  duration = 4900
+
+  animationTimer = setInterval(() => {
+    if (new Date().getTime() - started > duration) {
+      clearInterval(animationTimer)
+      return
+    }
+
+    output.text(Math.floor(Math.random() * 99))
+  }, 100)
+}
+
+function animationStartRace(cars, pointer, turns) {
   $("#cars").html('')
 
   let carHtml = '<section class="d-flex justify-content-center m-3 align-items-center">'
@@ -222,8 +249,8 @@ function animationStartRace(cars) {
         '<div class="d-flex justify-content-center m-3 align-items-center">' +
         `<h1 class="text-white bangers m-auto" style="width: 40px;" id="output-${car.id}">${number}</h1>`
 
-    if (car.hashCar === localStorage.getItem('hashCar')) {
-      carHtml +=  `<button class="pushable mt-3 ms-3" onclick="drawNumber(${car.id})">` +
+    if (car.hashCar === localStorage.getItem('hashCar') && pointer === index + 1) {
+      carHtml +=  `<button class="pushable mt-3 ms-3" onclick="drawNumber(${car.id}, ${pointer}, ${turns})">` +
                   '<span class="shadow"></span>' +
                   '<span class="edge green"></span>' +
                   '<span class="front green">' +
@@ -253,7 +280,9 @@ function animationStartRace(cars) {
   $("#cars").html(carHtml);
 }
 
-function drawNumber(id) {
+function drawNumber(id, pointer, turns) {
+  socket.emit('animation-draw-number', {id: id})
+
   let output, started, duration
   
   duration = 5000
@@ -264,7 +293,7 @@ function drawNumber(id) {
   animationTimer = setInterval(() => {
     if (new Date().getTime() - started > duration) {
       clearInterval(animationTimer)
-      sendNumber(id, output.text())
+      sendNumber(id, output.text(), pointer, turns)
       return
     }
 
@@ -272,16 +301,16 @@ function drawNumber(id) {
   }, 100)
 }
 
-function sendNumber(id, number) {
-  socket.emit('save-number', {id: id, number: number})
+function sendNumber(id, number, pointer, turns) {
+  socket.emit('save-number', {id: id, number: number, pointer: pointer, turns: turns})
 }
 
-socket.on('saved-number', (cars) => {
+socket.on('saved-number', (args) => {
   let canReload = true;
 
-  animationStartRace(cars)
+  animationStartRace(args.cars, args.pointer, args.turns)
 
-  $(cars).each((index, car) => {
+  $(args.cars).each((index, car) => {
     if(car.number === null) {
       canReload = false
     }
@@ -296,11 +325,38 @@ socket.on('saved-number', (cars) => {
   animationTimer = setInterval(() => {
     if (new Date().getTime() - started > 2000) {
       clearInterval(animationTimer)
-      socket.emit('update-positions', {})
+      socket.emit('update-positions', args.turns)
     }
   }, 1000)
 })
 
-socket.on('reload-cars-race', (cars) => {
-  animationStartRace(cars)
+socket.on('reload-cars-race', (args) => {
+  animationStartRace(args.cars, args.pointer, args.turns)
+})
+
+
+socket.on('finish-cars-race', (cars) => {
+  $("#cars").html('');
+
+  let podium = 
+    '<section class="d-flex justify-content-center m-3 align-items-center">' +
+      '<section class="d-flex flex-column justify-content-between m-5 align-items-center">' +
+        '<img src="/images/podium/second-place.svg" style="width: 150px; height: auto;" class="mb-3" alt="trophy">' +
+        `<h1 class="text-white bangers m-auto">${cars[1].racing_driver}</h1>` +
+      '</section>' +
+      '<section class="d-flex flex-column justify-content-between m-5 align-items-center">' +
+        '<img src="/images/podium/trophy.svg" style="width: 250px; height: auto;" class="mb-3" alt="trophy">' +
+        `<h1 class="text-white bangers m-auto">${cars[0].racing_driver}</h1>` +
+      '</section>';
+  
+  if (cars.length >= 3) {
+    podium += '<section class="d-flex flex-column justify-content-between m-5 align-items-center">' +
+      '<img src="/images/podium/third-place.svg" style="width: 150px; height: auto;" class="mb-3" alt="trophy">' +
+      `<h1 class="text-white bangers m-auto">${cars[2].racing_driver}</h1>` +
+    '</section>';
+  }
+  
+  podium += '</section>';
+
+  $("#cars").html(podium);
 })

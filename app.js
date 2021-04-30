@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000
 const io = require("socket.io")(httpServer, {})
 
 const { create, findAll, findBy, deleteById, saveNumber, updatePositions } = require('./src/cars.js')
-const { acceptRace, refuseRace, defineAllPositions, startRace } = require('./src/race.js')
+const { acceptRace, refuseRace, defineAllPositions, startRace, getStatusRace, finishRace } = require('./src/race.js')
 
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + '/public/css'))
@@ -32,9 +32,21 @@ app.post('/cars', async (req, res) => {
 io.on("connection", (socket) => {
   let hashCar = null;
 
-  socket.on('load-cars', async () => {
+  socket.on('load-cars', async () => {      
+    let status = await getStatusRace()
+
+    if (status === 'on' && hashCar === null) {
+      let cars = await findAll()
+      socket.emit('reload-cars-race-on', cars)
+      return;
+    }
+
     let cars = await findAll()
     socket.emit('reload-cars', cars)
+  })
+
+  socket.on('animation-draw-number', (args) => {
+    socket.broadcast.emit('animation-draw-number-client', {id: args.id})
   })
 
   socket.on("created-car", async (arg) => {
@@ -88,17 +100,31 @@ io.on("connection", (socket) => {
 
     if (response.status === 200) {
       let cars = await findAll()
-      socket.broadcast.emit('saved-number', cars)
+      socket.emit('saved-number', {cars: cars, pointer: arg.pointer + 1, turns: arg.turns})
+      socket.broadcast.emit('saved-number', {cars: cars, pointer: arg.pointer + 1, turns: arg.turns})
     }
   })
 
-  socket.on("update-positions", async() => {
+  socket.on("update-positions", async(turns) => {
+    let newTurn = typeof turns === 'undefined' ? 1 : turns + 1;
+
     let response = await updatePositions()
+
+    if (newTurn === 3) {
+      await finishRace()
+
+      let cars = await findAll()
+
+      socket.emit('finish-cars-race', cars)
+      socket.broadcast.emit('finish-cars-race', cars)
+      return;
+    }
 
     if (response.status === 200) {
       let cars = await findAll()
-      socket.emit('reload-cars-race', cars)
-      socket.broadcast.emit('reload-cars-race', cars)
+
+      socket.emit('reload-cars-race', {cars: cars, pointer: 1, turns: newTurn})
+      socket.broadcast.emit('reload-cars-race', {cars: cars, pointer: 1, turns: newTurn})
     }
   })
 
@@ -109,7 +135,7 @@ io.on("connection", (socket) => {
 
     if (response.status === 200) {
       let cars = await findAll()
-      socket.emit('race-was-started', cars)
+      socket.emit('race-was-started', {cars: cars, pointer: 1})
     }
   })
 
